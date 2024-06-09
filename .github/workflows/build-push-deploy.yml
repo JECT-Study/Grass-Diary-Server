@@ -2,7 +2,7 @@ name: Build Gradle And Deploy to EC2 Instance
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "release" ]
 
 jobs:
   jar-build:
