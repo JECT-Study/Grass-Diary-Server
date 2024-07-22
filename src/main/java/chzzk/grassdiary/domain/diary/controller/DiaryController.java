@@ -51,8 +51,8 @@ public class DiaryController {
     }
 
     @GetMapping("/{diaryId}")
-    public DiaryDTO findById(@PathVariable(name = "diaryId") Long diaryId,
-                                     @AuthenticatedMember AuthMemberPayload payload) {
+    public DiaryDetailDTO findById(@PathVariable(name = "diaryId") Long diaryId,
+                                   @AuthenticatedMember AuthMemberPayload payload) {
         return diaryService.findById(diaryId, payload.id());
     }
 
@@ -66,7 +66,7 @@ public class DiaryController {
             description =
                     "최신순 5개씩(`api/diary/main/{memberId}?page=0`), 오래된 순 5개씩(`api/diary/main/1?page=0&sort=createdAt,ASC`) "
                             + "\n페이지를 나타내는 변수가 있는데, 해당 표에는 바로 나타나지 않으니 실행 시켜보시는 것을 추천드립니다.")
-    @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = DiaryDTO.class)))
+    @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = DiaryDetailDTO.class)))
     public ResponseEntity<?> findAll(
             @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             @PathVariable Long memberId,

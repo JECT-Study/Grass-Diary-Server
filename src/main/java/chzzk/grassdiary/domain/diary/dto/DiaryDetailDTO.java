@@ -5,7 +5,7 @@ import chzzk.grassdiary.domain.diary.entity.tag.TagList;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public record DiaryDTO(
+public record DiaryDetailDTO(
         Long diaryId,
         String content,
         List<TagList> tags,
@@ -18,8 +18,8 @@ public record DiaryDTO(
         Boolean hasImage,
         String imageURL
 ) {
-    public static DiaryDTO from(Diary diary, List<TagList> tags, boolean isLikedByLogInMember, String imageURL) {
-        return new DiaryDTO(
+    public static DiaryDetailDTO from(Diary diary, List<TagList> tags, boolean isLikedByLogInMember, String imageURL) {
+        return new DiaryDetailDTO(
                 diary.getId(),
                 diary.getContent(),
                 tags,

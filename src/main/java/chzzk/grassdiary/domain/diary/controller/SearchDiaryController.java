@@ -2,7 +2,7 @@ package chzzk.grassdiary.domain.diary.controller;
 
 import chzzk.grassdiary.domain.diary.service.DiaryService;
 import chzzk.grassdiary.domain.diary.service.TagService;
-import chzzk.grassdiary.domain.diary.dto.DiaryDTO;
+import chzzk.grassdiary.domain.diary.dto.DiaryDetailDTO;
 import chzzk.grassdiary.domain.diary.dto.TagDTO;
 import chzzk.grassdiary.global.auth.common.AuthenticatedMember;
 import chzzk.grassdiary.global.auth.service.dto.AuthMemberPayload;
@@ -43,7 +43,7 @@ public class SearchDiaryController {
     @Operation(
             summary = "해시태그에 대한 다이어리 검색",
             description = "유저가 해시태그를 선택하면 해당 해시태그를 사용한 다이어리 리스트를 반환")
-    @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = DiaryDTO.class)))
+    @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = DiaryDetailDTO.class)))
     @Parameters({
             @Parameter(name = "memberId", description = "멤버 아이디"),
             @Parameter(name = "tagId", description = "검색을 원하는 해시태그 아이디")
@@ -64,7 +64,7 @@ public class SearchDiaryController {
             @Parameter(name = "memberId", description = "멤버 아이디"),
             @Parameter(name = "date", description = "검색하는 날짜 String 값(형식: yyyy-MM-dd)")
     })
-    @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = DiaryDTO.class)))
+    @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = DiaryDetailDTO.class)))
     public ResponseEntity<?> searchByDate(
             @PathVariable Long memberId,
             @RequestParam String date,

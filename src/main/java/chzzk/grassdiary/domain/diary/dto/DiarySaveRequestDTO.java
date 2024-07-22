@@ -17,13 +17,12 @@ public class DiarySaveRequestDTO {
     private Member member;
     private String content;
     private Boolean isPrivate;
-    private Boolean hasImage;
     private Boolean hasTag;
     private ConditionLevel conditionLevel;
     private List<String> hashtags;
 
     // DTO -> Entity
-    public Diary toEntity(Member member) {
+    public Diary toEntity(Member member, Boolean hasImage) {
         return Diary.builder()
                 .member(member)
                 .content(content)

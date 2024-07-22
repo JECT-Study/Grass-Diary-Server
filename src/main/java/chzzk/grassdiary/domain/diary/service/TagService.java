@@ -7,7 +7,7 @@ import chzzk.grassdiary.domain.diary.entity.tag.MemberTags;
 import chzzk.grassdiary.domain.diary.entity.tag.MemberTagsDAO;
 import chzzk.grassdiary.domain.diary.entity.tag.TagList;
 import chzzk.grassdiary.domain.diary.entity.tag.TagListDAO;
-import chzzk.grassdiary.domain.diary.dto.DiaryDTO;
+import chzzk.grassdiary.domain.diary.dto.DiaryDetailDTO;
 import chzzk.grassdiary.domain.diary.dto.TagDTO;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,17 +32,20 @@ public class TagService {
      */
     public List<TagDTO> getMemberTags(Long memberId) {
         // 멤버가 사용한 태그의 tag_id 목록 가져오기
-        List<Long> tagIds = memberTagsDAO.findTagIdsByMemberId(memberId);
+        List<MemberTags> memberTags = memberTagsDAO.findMemberTagsByMemberId(memberId);
 
-        // 태그 DTO 조회
-        return tagListDAO.findTagDTOByIdIn(tagIds).stream()
-                .map(tag -> new TagDTO(tag.getId(), tag.getTag())).toList();
+        return memberTags.stream().map(tag ->
+                new TagDTO(
+                        tag.getTagList().getId(),
+                        tag.getTagList().getTag(),
+                        tag.getMemberTagUsageCount())
+        ).toList();
     }
 
     /**
      * 유저의 다이어리 태그로 다이어리 검색
      */
-    public List<DiaryDTO> findByHashTagId(Long memberId, Long tagId, Long logInMemberId) {
+    public List<DiaryDetailDTO> findByHashTagId(Long memberId, Long tagId, Long logInMemberId) {
         List<Diary> diaries = diaryTagDAO.findByMemberIdAndTagId(memberId, tagId);
 
         return diaries.stream()
@@ -53,9 +56,9 @@ public class TagService {
                             .toList();
                     boolean isLiked = diaryLikeDAO.findByDiaryIdAndMemberId(diary.getId(), logInMemberId).isPresent();
 
-                    return DiaryDTO.from(diary, tags, isLiked, getImageURL(diary.getHasImage(), diary.getId()));
+                    return DiaryDetailDTO.from(diary, tags, isLiked, getImageURL(diary.getHasImage(), diary.getId()));
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private String getImageURL(Boolean hasImage, Long diaryId) {
