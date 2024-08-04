@@ -106,11 +106,27 @@ _<h3> <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fl
 
 <details>
     <summary>
-      Commit convention
+      Branch convention
+    </summary>
+
+| branch  | 설명                    |
+|:-------:|-----------------------|
+| release | 배포 되어 있는 브랜치          |
+|   dev   | 다음 릴리즈 기간까지 개발 중인 브랜치 |
+
+</details>
+
+<details>
+    <summary>
+      Commit & Pull Request convention
     </summary>
 
 ```
+# Commit
 Type(File or function): Subject
+
+# Pull Request
+[type/worked-branch] Subject
 ```
 
 |    Type    | 설명                                             |
@@ -124,6 +140,5 @@ Type(File or function): Subject
 |    test    | 테스트 코드 추가                                      |
 |   chore    | 빌드 업무 수정, 패키지 매니저 수정 (pom.xml 등)               |
 |   remove   | 파일 삭제                                          |
-
 
 </details>
