@@ -20,19 +20,19 @@ jobs:
       run: |
         echo "REVIEW_API_URL=${{ secrets.REVIEW_API_URL }}" >> $GITHUB_ENV
 
-    # - name: Debug REVIEW_API_URL
-    #   run: echo "REVIEW_API_URL=$REVIEW_API_URL"
+    - name: Debug REVIEW_API_URL
+      run: echo "REVIEW_API_URL=$REVIEW_API_URL"
   
-    # - name: API calling for CodeReview
-    #   id: api_call
-    #   run: |
-    #       if [ -z "$REVIEW_API_URL" ]; then
-    #         echo "REVIEW_API_URL is not set"
-    #         exit 1
-    #       fi
-    #       REVIEW_RESPONSE=$(curl -X POST $REVIEW_API_URL)
-    #       echo "Review Response: $REVIEW_RESPONSE"
-    #       echo "REVIEW_RESPONSE=$REVIEW_RESPONSE" >> $GITHUB_ENV
+    - name: API calling for CodeReview
+      id: api_call
+      run: |
+          if [ -z "$REVIEW_API_URL" ]; then
+            echo "REVIEW_API_URL is not set"
+            exit 1
+          fi
+          REVIEW_RESPONSE=$(curl -X POST $REVIEW_API_URL)
+          echo "Review Response: $REVIEW_RESPONSE"
+          echo "REVIEW_RESPONSE=$REVIEW_RESPONSE" >> $GITHUB_ENV
 
     - name: Get Git Diff
       id: git_diff
@@ -46,22 +46,22 @@ jobs:
             echo "EOF" >> $GITHUB_ENV
             echo "Diff added to GITHUB_ENV"
 
-    - name: API calling for CodeReview
-      id: api_call
-      run: |
-            ESCAPED_DIFF=$(echo "$DIFF_CONTENT" | jq -sRr @json)
-            REQUEST_BODY=$(jq -n \
-              --arg model "Meta-Llama-3_1-8B-Instruct_Q4_K_M" \
-              --arg prompt "Review the following code changes and provide feedback:$ESCAPED_DIFF" \
-              '{model: $model, prompt: $prompt, stream: false}')
-            FULL_RESPONSE=$(curl -X POST ${REVIEW_API_URL} \
-              -H "Content-Type: application/json" \
-              -d "$REQUEST_BODY")
-            REVIEW_RESPONSE=$(echo $FULL_RESPONSE | jq -r '.response')
-            echo "Review Response: $REVIEW_RESPONSE"
-            echo "REVIEW_RESPONSE<<EOF" >> $GITHUB_ENV
-            echo "$REVIEW_RESPONSE" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
+    # - name: API calling for CodeReview
+    #   id: api_call
+    #   run: |
+    #         ESCAPED_DIFF=$(echo "$DIFF_CONTENT" | jq -sRr @json)
+    #         REQUEST_BODY=$(jq -n \
+    #           --arg model "Meta-Llama-3_1-8B-Instruct_Q4_K_M" \
+    #           --arg prompt "Review the following code changes and provide feedback:$ESCAPED_DIFF" \
+    #           '{model: $model, prompt: $prompt, stream: false}')
+    #         FULL_RESPONSE=$(curl -X POST ${REVIEW_API_URL} \
+    #           -H "Content-Type: application/json" \
+    #           -d "$REQUEST_BODY")
+    #         REVIEW_RESPONSE=$(echo $FULL_RESPONSE | jq -r '.response')
+    #         echo "Review Response: $REVIEW_RESPONSE"
+    #         echo "REVIEW_RESPONSE<<EOF" >> $GITHUB_ENV
+    #         echo "$REVIEW_RESPONSE" >> $GITHUB_ENV
+    #         echo "EOF" >> $GITHUB_ENV
 
     - name: Debug output
       run: |
