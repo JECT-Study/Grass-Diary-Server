@@ -2,6 +2,7 @@ package chzzk.grassdiary.global.auth.controller;
 
 import chzzk.grassdiary.global.auth.service.OAuthService;
 import chzzk.grassdiary.global.auth.service.dto.JWTTokenResponse;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +32,15 @@ public class OAuthController {
     @GetMapping("/code/google")
     public void authorizeUser(@RequestParam("code") String code, HttpServletResponse response) throws IOException {
         JWTTokenResponse jwtToken = oAuthService.loginGoogle(code);
-        String redirectUriWithJwt = generateRedirectUri(jwtToken.accessToken());
-        log.info("jwt 토큰이 담긴 url = {}", redirectUriWithJwt);
-        response.sendRedirect(redirectUriWithJwt);
-    }
+        
+        // JWT 토큰을 쿠키에 저장
+        Cookie cookie = new Cookie("accessToken", jwtToken.accessToken());
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true); // HTTPS에서만 쿠키 전송
+        cookie.setPath("/");
+        cookie.setMaxAge(3600); // 쿠키 유효 시간 설정 (예: 1시간)
+        response.addCookie(cookie);
 
-    private String generateRedirectUri(String accessToken) {
-        return String.format("%s?accessToken=%s", loginSuccessUri, accessToken);
+        response.sendRedirect(loginSuccessUri);
     }
 }
