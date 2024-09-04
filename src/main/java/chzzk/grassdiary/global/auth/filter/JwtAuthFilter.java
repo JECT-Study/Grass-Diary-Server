@@ -13,6 +13,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,30 +27,52 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtTokenExtractor jwtTokenExtractor;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberDAO memberDAO;
+    private final List<String> allowedOrigins = Arrays.asList(
+        "https://grassdiary.site",
+        "http://localhost:3000"
+    );
+
+    private final List<String> publicPaths = List.of(
+            "/api/shared/diaries"
+    );
+
+    private void setCorsHeaders(HttpServletRequest request, HttpServletResponse response) {
+        String origin = request.getHeader("Origin");
+        if (allowedOrigins.contains(origin)) {
+            response.setHeader("Access-Control-Allow-Origin", origin);
+        }
+        response.setHeader("Access-Control-Allow-Methods", "*");
+        response.setHeader("Access-Control-Allow-Headers",
+                "authorization, content-type, accept, origin, x-requested-with");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Max-Age", "3600");
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        response.setHeader("Access-Control-Allow-Methods", "*");
-        response.setHeader("Access-Control-Allow-Headers",
-                "authorization, content-type, accept, origin, x-requested-with");
-        response.setHeader("Access-Control-Allow-Origin", "https://grassdiary.site");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Max-Age", "3600");
+        setCorsHeaders(request, response);
+
+        String path = request.getRequestURI();
+        if (isPublicPath(path) || request.getMethod().equals("OPTIONS")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         try {
-            if (!request.getMethod().equals("OPTIONS")) {
-                String accessToken = jwtTokenExtractor.extractAccessToken(request);
-                Long id = jwtTokenProvider.extractIdFromAccessToken(accessToken);
-                validateMemberExist(id);
-                filterChain.doFilter(request, response);
-            }
+            String accessToken = jwtTokenExtractor.extractAccessToken(request);
+            Long id = jwtTokenProvider.extractIdFromAccessToken(accessToken);
+            validateMemberExist(id);
+            filterChain.doFilter(request, response);
         } catch (SystemException e) {
             log.error(e.getMessage());
             jwtExceptionHandler(response, e);
         }
+    }
 
+    private boolean isPublicPath(String path) {
+        return publicPaths.stream().anyMatch(path::startsWith);
     }
 
     public void jwtExceptionHandler(HttpServletResponse response, SystemException exception) throws IOException {

@@ -34,9 +34,7 @@ public class BrowseDiaryController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = DiaryPreviewDTO.class))})
     })
-    public ResponseEntity<List<DiaryPreviewDTO>> showTop10ThisWeek(
-            @Parameter(hidden = true) @AuthenticatedMember AuthMemberPayload payload
-    ) {
+    public ResponseEntity<List<DiaryPreviewDTO>> showTop10ThisWeek() {
         List<DiaryPreviewDTO> top10Diaries = browseDiaryService.findTop10DiariesThisWeek();
         return ResponseEntity.ok(top10Diaries);
     }
@@ -49,11 +47,9 @@ public class BrowseDiaryController {
                             schema = @Schema(implementation = AllLatestDiariesDto.class))})
     })
     public ResponseEntity<AllLatestDiariesDto> showLatestDiariesAfterCursor(
-            @Parameter(hidden = true) @AuthenticatedMember AuthMemberPayload payload,
             @RequestParam(value = "cursorId", required = false, defaultValue = Long.MAX_VALUE + "") Long cursorId,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
-
         AllLatestDiariesDto latestDiaries = browseDiaryService.findLatestDiariesAfterCursor(cursorId, size);
         return ResponseEntity.ok(latestDiaries);
     }
