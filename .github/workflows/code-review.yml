@@ -11,72 +11,72 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-    - name: Set Server Info
-      run: |
-        echo "REVIEW_API_URL=${{ secrets.REVIEW_API_URL }}" >> $GITHUB_ENV
+      - name: Set Server Info
+        run: |
+          echo "REVIEW_API_URL=${{ secrets.REVIEW_API_URL }}" >> $GITHUB_ENV
 
-    # - name: Debug REVIEW_API_URL
-    #   run: echo "REVIEW_API_URL=$REVIEW_API_URL"
-  
-    # - name: API calling for CodeReview
-    #   id: api_call
-    #   run: |
-    #       if [ -z "$REVIEW_API_URL" ]; then
-    #         echo "REVIEW_API_URL is not set"
-    #         exit 1
-    #       fi
-    #       REVIEW_RESPONSE=$(curl -X POST $REVIEW_API_URL)
-    #       echo "Review Response: $REVIEW_RESPONSE"
-    #       echo "REVIEW_RESPONSE=$REVIEW_RESPONSE" >> $GITHUB_ENV
+      # - name: Debug REVIEW_API_URL
+      #   run: echo "REVIEW_API_URL=$REVIEW_API_URL"
 
-    - name: Get Git Diff
-      id: git_diff
-      run: |
-            git fetch origin
-            git diff --unified=3 ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} > diff.txt
-            DIFF_CONTENT=$(cat diff.txt)
-            echo "Diff content length: $(wc -c < diff.txt)"
-            echo "DIFF_CONTENT<<EOF" >> $GITHUB_ENV
-            echo "$DIFF_CONTENT" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-            echo "Diff added to GITHUB_ENV"
+      # - name: API calling for CodeReview
+      #   id: api_call
+      #   run: |
+      #       if [ -z "$REVIEW_API_URL" ]; then
+      #         echo "REVIEW_API_URL is not set"
+      #         exit 1
+      #       fi
+      #       REVIEW_RESPONSE=$(curl -X POST $REVIEW_API_URL)
+      #       echo "Review Response: $REVIEW_RESPONSE"
+      #       echo "REVIEW_RESPONSE=$REVIEW_RESPONSE" >> $GITHUB_ENV
 
-    - name: API calling for CodeReview
-      id: api_call
-      run: |
-            ESCAPED_DIFF=$(echo "$DIFF_CONTENT" | jq -sRr @json)
-            REQUEST_BODY=$(jq -n \
-              --arg model "${{ secrets.REVIEW_MODEL_NAME }}" \
-              --arg prompt "Review the following code changes and provide feedback:$ESCAPED_DIFF" \
-              '{model: $model, prompt: $prompt, stream: false}')
-            FULL_RESPONSE=$(curl -X POST ${REVIEW_API_URL} \
-              -H "Content-Type: application/json" \
-              -d "$REQUEST_BODY")
-            REVIEW_RESPONSE=$(echo $FULL_RESPONSE | jq -r '.response')
-            echo "Review Response: $REVIEW_RESPONSE"
-            echo "REVIEW_RESPONSE<<EOF" >> $GITHUB_ENV
-            echo "$REVIEW_RESPONSE" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
+      - name: Get Git Diff
+        id: git_diff
+        run: |
+          git fetch origin
+          git diff --unified=3 ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} > diff.txt
+          DIFF_CONTENT=$(cat diff.txt)
+          echo "Diff content length: $(wc -c < diff.txt)"
+          echo "DIFF_CONTENT<<EOF" >> $GITHUB_ENV
+          echo "$DIFF_CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "Diff added to GITHUB_ENV"
 
-    - name: Debug output
-      run: |
-            echo "DIFF_CONTENT:"
-            echo "$DIFF_CONTENT"
-            echo "REVIEW_RESPONSE:"
-            echo "$REVIEW_RESPONSE"
+      - name: API calling for CodeReview
+        id: api_call
+        run: |
+          ESCAPED_DIFF=$(echo "$DIFF_CONTENT" | jq -sRr @json)
+          REQUEST_BODY=$(jq -n \
+            --arg model "${{ secrets.REVIEW_MODEL_NAME }}" \
+            --arg prompt "Review the following code changes and provide feedback:$ESCAPED_DIFF" \
+            '{model: $model, prompt: $prompt, stream: false}')
+          FULL_RESPONSE=$(curl -X POST ${REVIEW_API_URL} \
+            -H "Content-Type: application/json" \
+            -d "$REQUEST_BODY")
+          REVIEW_RESPONSE=$(echo $FULL_RESPONSE | jq -r '.response')
+          echo "Review Response: $REVIEW_RESPONSE"
+          echo "REVIEW_RESPONSE<<EOF" >> $GITHUB_ENV
+          echo "$REVIEW_RESPONSE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
-    - name: Add review to pull request
-      uses: actions/github-script@v6
-      env:
-        DIFF_CONTENT: ${{ env.DIFF_CONTENT }}
-      with:
-        github-token: ${{ secrets.REVIEW_BOT_TOKEN }}
-        script: |
+      - name: Debug output
+        run: |
+          echo "DIFF_CONTENT:"
+          echo "$DIFF_CONTENT"
+          echo "REVIEW_RESPONSE:"
+          echo "$REVIEW_RESPONSE"
+
+      - name: Add review to pull request
+        uses: actions/github-script@v6
+        env:
+          DIFF_CONTENT: ${{ env.DIFF_CONTENT }}
+        with:
+          github-token: ${{ secrets.REVIEW_BOT_TOKEN }}
+          script: |
             const diff = process.env.DIFF_CONTENT;
             const response = process.env.REVIEW_RESPONSE;
             github.rest.issues.createComment({

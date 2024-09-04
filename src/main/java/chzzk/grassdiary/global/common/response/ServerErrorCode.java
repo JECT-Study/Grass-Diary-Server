@@ -7,6 +7,7 @@ public enum ServerErrorCode implements ErrorCodeModel {
     OUT_OF_MEMORY(500, "OUT_OF_MEMORY", "서버에 메모리 부족이 발생했습니다. 잠시 후 다시 시도해주세요."),
     NOT_IMPLEMENTED(501, "NOT_IMPLEMENTED", "현재 지원되지 않는 기능입니다."),
     SERVICE_UNAVAILABLE(503, "SERVICE_UNAVAILABLE", "현재 서비스가 사용 불가합니다. 나중에 다시 시도해주세요."),
+    QUESTION_UNAVAILABLE(503, "QUESTION_UNAVAILABLE", "현재 '오늘의 일기' 서비스가 사용 불가합니다. 나중에 다시 시도해주세요."),
     IMAGE_UPLOAD_FAILED(500, "IMAGE_UPLOAD_FAILED", "이미지 업로드에 실패했습니다."),
     REWARD_HISTORY_SAVE_FAILED(500, "REWARD_HISTORY_SAVE_FAILED", "일기 히스토리 저장에 실패했습니다.");
 
