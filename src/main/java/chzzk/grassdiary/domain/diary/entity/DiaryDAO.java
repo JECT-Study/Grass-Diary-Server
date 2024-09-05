@@ -1,5 +1,6 @@
 package chzzk.grassdiary.domain.diary.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,5 +32,8 @@ public interface DiaryDAO extends JpaRepository<Diary, Long> {
             + " AND d.id < :cursorId"
             + " ORDER BY d.createdAt DESC, d.id DESC")
     List<Diary> findLatestDiaries(Long cursorId, Pageable pageable);
+
+    @Query("SELECT COUNT(d) > 0 FROM Diary d WHERE d.member.id = :memberId AND DATE(d.createdAt) = :date")
+    boolean existsByMemberIdAndDate(@Param("memberId") Long memberId, @Param("date") LocalDate date);
 }
 
