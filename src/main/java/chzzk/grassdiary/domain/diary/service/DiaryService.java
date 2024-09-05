@@ -1,5 +1,7 @@
 package chzzk.grassdiary.domain.diary.service;
 
+import chzzk.grassdiary.domain.comment.entity.Comment;
+import chzzk.grassdiary.domain.comment.entity.CommentDAO;
 import chzzk.grassdiary.domain.image.dto.ImageDTO;
 import chzzk.grassdiary.domain.image.entity.DiaryToImageDAO;
 import chzzk.grassdiary.domain.image.service.DiaryImageService;
@@ -49,6 +51,7 @@ public class DiaryService {
     private final MemberDAO memberDAO;
     private final DiaryTagDAO diaryTagDAO;
     private final RewardHistoryDAO rewardHistoryDAO;
+    private final CommentDAO commentDAO;
 
     private final DiaryImageService diaryImageService;
     private final DiaryToImageDAO diaryToImageDAO;
@@ -56,6 +59,9 @@ public class DiaryService {
     @Transactional
     public DiarySaveResponseDTO save(Long id, DiarySaveRequestDTO requestDto) {
         Member member = getMemberById(id);
+
+        validateDiaryExistenceForToday(member.getId());
+
         // 게시글 저장, 이미지가 있다면 매핑값 저장
         Diary diary = saveDiary(requestDto, member);
         saveTags(requestDto.getHashtags(), member, diary);
@@ -80,8 +86,12 @@ public class DiaryService {
      * 이미지 삭제
      */
     @Transactional
-    public void delete(Long diaryId) {
+    public void delete(Long diaryId, Long logInMemberId) {
         Diary diary = getDiaryById(diaryId);
+
+        validateDiaryOwner(diary, logInMemberId);
+
+        removeDiaryComments(diary);
         removeExistingTags(diary);
         removeDiaryLikes(diaryId);
         diaryImageService.deleteImageAndMapping(diary);
@@ -227,6 +237,14 @@ public class DiaryService {
         }
     }
 
+    private void validateDiaryExistenceForToday(Long memberId) {
+        LocalDate today = LocalDate.now();
+        boolean exists = diaryDAO.existsByMemberIdAndDate(memberId, today);
+        if (exists) {
+            throw new SystemException(ClientErrorCode.DIARY_ALREADY_EXISTS_FOR_TODAY);
+        }
+    }
+
     private void validateUpdateDate(Diary diary) {
         LocalDate createdAt = diary.getCreatedAt().toLocalDate();
         LocalDate today = LocalDateTime.now().toLocalDate();
@@ -240,6 +258,27 @@ public class DiaryService {
                 .ifPresent(diaryLike -> {
                     throw new SystemException(ClientErrorCode.DIARY_LIKE_ALREADY_EXISTS);
                 });
+    }
+
+    private void validateDiaryOwner(Diary diary, Long logInMemberId) {
+        if (!diary.getMember().getId().equals(logInMemberId)) {
+            throw new SystemException(ClientErrorCode.AUTHOR_MISMATCH_ERR);
+        }
+    }
+
+    private void removeDiaryComments(Diary diary) {
+        List<Comment> comments = diary.getComments();
+        for (Comment comment : comments) {
+            removeChildComments(comment);
+        }
+    }
+
+    private void removeChildComments(Comment parentComment) {
+        List<Comment> childComments = parentComment.getChildComments();
+        for (Comment childComment : childComments) {
+            removeChildComments(childComment);  // 재귀적으로 자식 댓글 삭제
+        }
+        commentDAO.delete(parentComment);
     }
 
     private void removeExistingTags(Diary diary) {

@@ -42,8 +42,9 @@ public class DiaryController {
     }
 
     @DeleteMapping("/{diaryId}")
-    public Long delete(@PathVariable(name = "diaryId") Long diaryId) {
-        diaryService.delete(diaryId);
+    public Long delete(@PathVariable(name = "diaryId") Long diaryId,
+                       @AuthenticatedMember AuthMemberPayload payload) {
+        diaryService.delete(diaryId, payload.id());
         return diaryId;
     }
 

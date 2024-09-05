@@ -11,6 +11,8 @@ public record DiaryPreviewDTO(
         Long diaryId,
         String content,
         int diaryLikeCount,
+        int commentCount,
+        float transparency,
         Long memberId,
         String nickname,
         String createdAt) {
@@ -21,6 +23,8 @@ public record DiaryPreviewDTO(
                         d.getId(),
                         trimContent(d.getContent()),
                         d.getDiaryLikes().size(),
+                        d.getComments().size(),
+                        d.getConditionLevel().getTransparency(),
                         d.getMember().getId(),
                         d.getMember().getNickname(),
                         d.getCreatedAt()
@@ -33,6 +37,8 @@ public record DiaryPreviewDTO(
                 diary.getId(),
                 trimContent(diary.getContent()),
                 diary.getDiaryLikes().size(),
+                diary.getComments().size(),
+                diary.getConditionLevel().getTransparency(),
                 diary.getMember().getId(),
                 diary.getMember().getNickname(),
                 diary.getCreatedAt()
