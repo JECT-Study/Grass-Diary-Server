@@ -58,7 +58,9 @@ public class CommentService {
     public CommentDeleteResponseDTO delete(Long commentId, Long logInMemberId) {
         Member member = getMemberById(logInMemberId);
         Comment comment = getCommentById(commentId);
-        validateCommentAuthor(member, comment);
+
+        validateDeleteAuthorization(member, comment);
+//        validateCommentAuthor(member, comment);
         validateNotDeleted(comment);
 
         comment.delete();
@@ -137,6 +139,16 @@ public class CommentService {
 
     private void validateCommentAuthor(Member member, Comment comment) {
         if (!member.equals(comment.getMember())) {
+            throw new SystemException(ClientErrorCode.AUTHOR_MISMATCH_ERR);
+        }
+    }
+
+    private void validateDeleteAuthorization(Member member, Comment comment) {
+        Diary diary = comment.getDiary();
+
+        boolean isAuthorized = member.equals(comment.getMember()) || member.equals(diary.getMember());
+
+        if (!isAuthorized) {
             throw new SystemException(ClientErrorCode.AUTHOR_MISMATCH_ERR);
         }
     }
