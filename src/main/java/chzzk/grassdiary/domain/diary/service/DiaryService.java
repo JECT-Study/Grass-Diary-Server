@@ -59,6 +59,9 @@ public class DiaryService {
     @Transactional
     public DiarySaveResponseDTO save(Long id, DiarySaveRequestDTO requestDto) {
         Member member = getMemberById(id);
+
+        validateDiaryExistenceForToday(member.getId());
+
         // 게시글 저장, 이미지가 있다면 매핑값 저장
         Diary diary = saveDiary(requestDto, member);
         saveTags(requestDto.getHashtags(), member, diary);
@@ -231,6 +234,14 @@ public class DiaryService {
 
         if (rewardHistory.getId() == null) {
             throw new SystemException(ServerErrorCode.REWARD_HISTORY_SAVE_FAILED);
+        }
+    }
+
+    private void validateDiaryExistenceForToday(Long memberId) {
+        LocalDate today = LocalDate.now();
+        boolean exists = diaryDAO.existsByMemberIdAndDate(memberId, today);
+        if (exists) {
+            throw new SystemException(ClientErrorCode.DIARY_ALREADY_EXISTS_FOR_TODAY);
         }
     }
 
