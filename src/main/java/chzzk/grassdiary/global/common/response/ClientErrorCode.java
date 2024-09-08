@@ -16,6 +16,7 @@ public enum ClientErrorCode implements ErrorCodeModel {
     DIARY_NOT_FOUND_ERR(404, "DIARY_NOT_FOUND_ERR", "요청하신 다이어리를 찾을 수 없습니다."),
     DIARY_LIKE_NOT_FOUND(404, "DIARY_LIKE_NOT_FOUND", "해당 다이어리에 좋아요를 누르지 않았습니다."),
     DIARY_LIKE_ALREADY_EXISTS(409, "DIARY_LIKE_ALREADY_EXISTS", "다이어리에 좋아요를 이미 눌렀습니다."),
+    DIARY_ALREADY_EXISTS_FOR_TODAY(409, "DIARY_ALREADY_EXISTS_FOR_TODAY", "일기는 하루에 하나만 작성 가능합니다."),
     COMMENT_NOT_FOUND_ERR(404, "COMMENT_NOT_FOUND_ERR", "요청하신 댓글을 찾을 수 없습니다."),
     INVALID_IMAGE_FORMAT(400, "INVALID_IMAGE_FORMAT", "허용되지 않는 파일 형식입니다."),
     IMAGE_FILE_EMPTY(400, "IMAGE_FILE_EMPTY", "이미지 파일이 비어 있습니다."),
