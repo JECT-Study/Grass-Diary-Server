@@ -69,11 +69,11 @@ public class DiaryService {
         int rewardPoint = makeRewardPoint();
         saveRewardPointAndHistory(member, rewardPoint);
 
-        return new DiarySaveResponseDTO(diary.getId());
+        return new DiarySaveResponseDTO(diary.getId(), rewardPoint);
     }
 
     @Transactional
-    public DiarySaveResponseDTO update(Long id, DiaryUpdateRequestDTO requestDto) {
+    public DiaryUpdateResponseDTO update(Long id, DiaryUpdateRequestDTO requestDto) {
         Diary originalDiary = getDiaryById(id);
         validateUpdateDate(originalDiary);
         updateTags(originalDiary, requestDto.getHashtags());
@@ -317,7 +317,7 @@ public class DiaryService {
         diaryLikeDAO.deleteAll(diaryLikes);
     }
 
-    private DiarySaveResponseDTO updateDiary(DiaryUpdateRequestDTO requestDto, Diary diary) {
+    private DiaryUpdateResponseDTO updateDiary(DiaryUpdateRequestDTO requestDto, Diary diary) {
         // 1. 기존 이미지가 있고, 이미지 id 값이 동일하다면 유지
         Long newImageId = requestDto.getImageId();
         Long existImageId = diaryImageService.getImageIdByDiaryId(diary.getId());
@@ -339,7 +339,7 @@ public class DiaryService {
         diary.update(requestDto.getContent(), requestDto.getIsPrivate(),
                 requestDto.getHasTag(), requestDto.getConditionLevel());
 
-        return new DiarySaveResponseDTO(diary.getId());
+        return new DiaryUpdateResponseDTO(diary.getId());
     }
 
     // 다이어리에 해당하는 태그 리스트
