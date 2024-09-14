@@ -38,10 +38,23 @@ public class CommentService {
 
         int commentDepth = calculateCommentDepth(parentComment);
         validateCommentDepth(commentDepth);
+
         Comment comment = requestDTO.toEntity(member, diary, parentComment, commentDepth);
-        commentDAO.save(comment);
+        commentDAO.saveAndFlush(comment);
+
+        assignGroupToComment(comment, parentComment);
 
         return CommentResponseDTO.from(comment);
+    }
+
+    private void assignGroupToComment(Comment comment, Comment parentComment) {
+        if (parentComment == null) {
+            // For parent comments, group is its own ID
+            comment.assignGroup(comment.getId());
+        } else {
+            // For child comments, group is the parent's group
+            comment.assignGroup(parentComment.getGroup());
+        }
     }
 
     @Transactional
