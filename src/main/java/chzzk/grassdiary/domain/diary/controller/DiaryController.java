@@ -34,7 +34,7 @@ public class DiaryController {
     }
 
     @PatchMapping("/{diaryId}")
-    public DiarySaveResponseDTO update(
+    public DiaryUpdateResponseDTO update(
             @PathVariable(name = "diaryId") Long diaryId,
             @RequestBody DiaryUpdateRequestDTO requestDto
     ) {
