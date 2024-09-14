@@ -26,7 +26,7 @@ public record CommentResponseDTO(
                 comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yy년 MM월 dd일")),
                 comment.getCreatedAt().format(DateTimeFormatter.ofPattern("HH:mm")),
                 comment.getDepth(),
-                comment.getChildComments().stream().map(CommentResponseDTO::from).collect(Collectors.toList())
+                comment.getChildComments().stream().map(CommentResponseDTO::fromComment).collect(Collectors.toList())
         );
     }
 
@@ -39,7 +39,15 @@ public record CommentResponseDTO(
                 null,
                 null,
                 comment.getDepth(),
-                comment.getChildComments().stream().map(CommentResponseDTO::from).collect(Collectors.toList())
+                comment.getChildComments().stream().map(CommentResponseDTO::fromComment).collect(Collectors.toList())
         );
+    }
+
+    public static CommentResponseDTO fromComment(Comment comment) {
+        if (comment.isDeleted()) {
+            return fromDeleted(comment);
+        } else {
+            return from(comment);
+        }
     }
 }
