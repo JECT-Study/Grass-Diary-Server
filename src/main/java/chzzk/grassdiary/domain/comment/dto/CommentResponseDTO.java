@@ -15,6 +15,7 @@ public record CommentResponseDTO(
         String createdDate,
         String createdAt,
         int depth,
+        Long group,
         List<CommentResponseDTO> childComments
 ) {
     public static CommentResponseDTO from(Comment comment) {
@@ -26,6 +27,7 @@ public record CommentResponseDTO(
                 comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yy년 MM월 dd일")),
                 comment.getCreatedAt().format(DateTimeFormatter.ofPattern("HH:mm")),
                 comment.getDepth(),
+                comment.getGroup(),
                 comment.getChildComments().stream().map(CommentResponseDTO::fromComment).collect(Collectors.toList())
         );
     }
@@ -36,9 +38,10 @@ public record CommentResponseDTO(
                 null,
                 null,
                 true,
-                null,
-                null,
+                comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yy년 MM월 dd일")),
+                comment.getCreatedAt().format(DateTimeFormatter.ofPattern("HH:mm")),
                 comment.getDepth(),
+                comment.getGroup(),
                 comment.getChildComments().stream().map(CommentResponseDTO::fromComment).collect(Collectors.toList())
         );
     }

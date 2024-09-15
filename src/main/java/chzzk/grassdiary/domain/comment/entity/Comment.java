@@ -49,13 +49,13 @@ public class Comment extends BaseTimeEntity {
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
     private List<Comment> childComments = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
-//    private List<CommentLike> commentLikes = new ArrayList<>();
-
     private boolean deleted;
 
     @Column(nullable = false)
     private int depth;
+
+    @Column(name = "comment_group")
+    private Long group;
 
     @Builder
     protected Comment(Member member, Diary diary, String content, Comment parentComment, int depth) {
@@ -73,5 +73,9 @@ public class Comment extends BaseTimeEntity {
 
     public void delete() {
         this.deleted = true;
+    }
+
+    public void assignGroup(Long groupValue) {
+        this.group = groupValue;
     }
 }
