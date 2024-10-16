@@ -79,6 +79,10 @@ public class Diary extends BaseTimeEntity {
         this.conditionLevel = conditionLevel;
     }
 
+    public void updateVisibility() {
+        this.isPrivate = !this.isPrivate;
+    }
+
     public LocalDateTime getCreatedAt() {
         return super.getCreatedAt();
     }

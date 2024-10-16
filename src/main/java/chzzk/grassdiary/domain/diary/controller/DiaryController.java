@@ -41,6 +41,14 @@ public class DiaryController {
         return diaryService.update(diaryId, requestDto);
     }
 
+    @PatchMapping("/{diaryId}/visibility")
+    public ResponseEntity<?> updateVisibility(
+            @PathVariable(name = "diaryId") Long diaryId,
+            @AuthenticatedMember AuthMemberPayload loginMember) {
+        diaryService.updateVisibility(diaryId, loginMember.id());
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{diaryId}")
     public Long delete(@PathVariable(name = "diaryId") Long diaryId,
                        @AuthenticatedMember AuthMemberPayload payload) {
