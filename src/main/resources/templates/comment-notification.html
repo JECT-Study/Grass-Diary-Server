@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>새로운 댓글 알림</title>
+    <style>
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333333;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .header-image {
+            width: 200px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        .content {
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #e9ecef;
+        }
+        .diary-date {
+            font-size: 18px;
+            color: #495057;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .comment-box {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .commenter-info {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        .comment-text {
+            color: #666666;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #029764;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <div class="header">
+        <img class="header-image" th:src="'cid:headerImage'" alt="헤더 이미지"/>
+    </div>
+
+    <div class="content">
+        <p th:text="${recipientName} + '님, 일기에 새로운 댓글이 달렸어요!'">홍길동님, 일기에 새로운 댓글이 달렸어요!</p>
+
+        <div class="diary-date">
+            <strong>일기 작성일:</strong>
+            <span th:text="${#temporals.format(diaryDate, 'yyyy년 MM월 dd일')}">2024년 03월 21일</span>
+        </div>
+
+        <div class="comment-box">
+            <div class="commenter-info">
+                <span th:text="${commenterName}">댓글 작성자</span>님의 댓글
+                <span th:text="${#temporals.format(commentDate, 'yyyy-MM-dd HH:mm')}">2024-03-21 14:30</span>
+            </div>
+            <div class="comment-text">
+                <p th:text="${commentContent}">댓글 내용이 여기에 표시됩니다.</p>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <a th:href="${diaryUrl}" class="button">새로운 댓글 보러가기</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>본 메일은 자동으로 발송되는 알림 메일입니다.</p>
+<!--        <p>더 이상 알림을 받고 싶지 않으시다면 <a th:href="${unsubscribeUrl}">여기</a>를 클릭하세요.</p>-->
+    </div>
+</div>
+</body>
+</html>

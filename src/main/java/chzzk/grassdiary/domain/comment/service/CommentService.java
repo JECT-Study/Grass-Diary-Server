@@ -10,6 +10,7 @@ import chzzk.grassdiary.domain.diary.entity.DiaryDAO;
 import chzzk.grassdiary.domain.comment.dto.CommentResponseDTO;
 import chzzk.grassdiary.domain.member.entity.Member;
 import chzzk.grassdiary.domain.member.entity.MemberDAO;
+import chzzk.grassdiary.domain.notification.CommentCreatedEvent;
 import chzzk.grassdiary.global.common.error.exception.SystemException;
 import chzzk.grassdiary.global.common.response.ClientErrorCode;
 import java.util.ArrayList;
@@ -18,20 +19,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
+
+    private static final int MAX_LENGTH = 70;
+    private static final String ELLIPSIS = "...";
+    private static final Logger log = LoggerFactory.getLogger(CommentService.class);
+
     private final CommentDAO commentDAO;
     private final DiaryDAO diaryDAO;
     private final MemberDAO memberDAO;
 
+    private final ApplicationEventPublisher eventPublisher;
+
     @Transactional
-    public CommentResponseDTO save(Long diaryId, CommentSaveRequestDTO requestDTO, Long logInMemberId) {
+    public CommentResponseDTO save(Long diaryId, CommentSaveRequestDTO requestDTO, final Long logInMemberId) {
         Member member = getMemberById(logInMemberId);
         Diary diary = getDiaryById(diaryId);
         Comment parentComment = getParentCommentById(requestDTO.parentCommentId());
@@ -41,7 +51,34 @@ public class CommentService {
         Comment comment = requestDTO.toEntity(member, diary, parentComment, commentDepth);
         commentDAO.save(comment);
 
+        // 댓글에 대한 이메일 알람
+        Member diaryAuthor = diary.getMember();
+        if (!logInMemberId.equals(diaryAuthor.getId())) {
+            log.info("댓글 알람 시작: {}", diaryAuthor);
+            String commentContent = truncateContent(comment.getContent());
+
+            CommentCreatedEvent event = new CommentCreatedEvent(this,
+                    diaryId,
+                    diaryAuthor.getNickname(),
+                    diaryAuthor.getEmail(),
+                    commentContent,
+                    diary.getCreatedAt(),
+                    member.getNickname(),
+                    comment.getCreatedAt()
+            );
+            eventPublisher.publishEvent(event);
+        }
+
         return CommentResponseDTO.from(comment);
+    }
+
+    private String truncateContent(String content) {
+        if (content == null) {
+            return "";
+        }
+        return content.length() > MAX_LENGTH
+                ? content.substring(0, MAX_LENGTH) + ELLIPSIS
+                : content;
     }
 
     @Transactional

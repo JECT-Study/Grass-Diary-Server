@@ -61,6 +61,11 @@ dependencies {
 
     // 모니터링을 위한 패키지
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // 이메일 알림 전송용
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 }
 
 compileJava {
