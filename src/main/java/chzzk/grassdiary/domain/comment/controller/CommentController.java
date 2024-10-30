@@ -7,6 +7,8 @@ import chzzk.grassdiary.domain.comment.dto.CommentUpdateRequestDTO;
 import chzzk.grassdiary.domain.comment.service.CommentService;
 import chzzk.grassdiary.global.auth.common.AuthenticatedMember;
 import chzzk.grassdiary.global.auth.service.dto.AuthMemberPayload;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +30,13 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{diaryId}")
+    @Operation(
+            summary = "댓글 작성 요청",
+            description = "댓글 내용, 부모 댓글이 있다면 id 값, 없다면 null")
     public CommentResponseDTO save(
-            @PathVariable(name = "diaryId") Long diaryId,
+            @Schema(hidden = true) @PathVariable(name = "diaryId") Long diaryId,
             @RequestBody CommentSaveRequestDTO requestDTO,
-            @AuthenticatedMember AuthMemberPayload payload
+            @Schema(hidden = true) @AuthenticatedMember AuthMemberPayload payload
     ) {
         return commentService.save(diaryId, requestDTO, payload.id());
     }
