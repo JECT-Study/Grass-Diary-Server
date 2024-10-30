@@ -61,6 +61,7 @@ dependencies {
 
     // 모니터링을 위한 패키지
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 
     // 이메일 알림 전송용
     implementation 'org.springframework.boot:spring-boot-starter-mail'
