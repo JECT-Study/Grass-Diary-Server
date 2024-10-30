@@ -34,7 +34,7 @@ public class CommentController {
             summary = "댓글 작성 요청",
             description = "댓글 내용, 부모 댓글이 있다면 id 값, 없다면 null")
     public CommentResponseDTO save(
-            @Schema(hidden = true) @PathVariable(name = "diaryId") Long diaryId,
+            @PathVariable(name = "diaryId") Long diaryId,
             @RequestBody CommentSaveRequestDTO requestDTO,
             @Schema(hidden = true) @AuthenticatedMember AuthMemberPayload payload
     ) {
