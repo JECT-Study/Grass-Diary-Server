@@ -40,37 +40,53 @@ public class CommentService {
 
     private final ApplicationEventPublisher eventPublisher;
 
+    /**
+     * 댓글 작성 및 이메일 알림
+     */
     @Transactional
     public CommentResponseDTO save(Long diaryId, CommentSaveRequestDTO requestDTO, final Long logInMemberId) {
         Member member = getMemberById(logInMemberId);
         Diary diary = getDiaryById(diaryId);
         Comment parentComment = getParentCommentById(requestDTO.parentCommentId());
 
-        int commentDepth = calculateCommentDepth(parentComment);
-        validateCommentDepth(commentDepth);
-        Comment comment = requestDTO.toEntity(member, diary, parentComment, commentDepth);
-        commentDAO.save(comment);
+        Comment comment = saveComment(member, diary, parentComment, requestDTO);
 
-        // 댓글에 대한 이메일 알람
-        Member diaryAuthor = diary.getMember();
-        if (!logInMemberId.equals(diaryAuthor.getId())) {
-            log.info("댓글 알람 시작: {}", diaryAuthor);
-            String commentContent = truncateContent(comment.getContent());
-
-            CommentCreatedEvent event = new CommentCreatedEvent(this,
-                    diaryId,
-                    diaryAuthor.getNickname(),
-                    diaryAuthor.getEmail(),
-                    commentContent,
-                    diary.getCreatedAt(),
-                    member.getNickname(),
-                    comment.getCreatedAt()
-            );
-            eventPublisher.publishEvent(event);
+        if (isNotificationRequired(logInMemberId, diary)) {
+            publishCommentCreatedEvent(diary, member, comment);
         }
 
         return CommentResponseDTO.from(comment);
     }
+
+    private Comment saveComment(Member member, Diary diary, Comment parentComment, CommentSaveRequestDTO requestDTO) {
+        int commentDepth = calculateCommentDepth(parentComment);
+        validateCommentDepth(commentDepth);
+
+        Comment comment = requestDTO.toEntity(member, diary, parentComment, commentDepth);
+        commentDAO.save(comment);
+        return comment;
+    }
+
+    private boolean isNotificationRequired(Long logInMemberId, Diary diary) {
+        return !logInMemberId.equals(diary.getMember().getId());
+    }
+
+    private void publishCommentCreatedEvent(Diary diary, Member member, Comment comment) {
+        Member diaryAuthor = diary.getMember();
+        log.info("댓글 알람 시작: {}", diaryAuthor);
+
+        CommentCreatedEvent event = new CommentCreatedEvent(this,
+                diary.getId(),
+                diaryAuthor.getNickname(),
+                diaryAuthor.getEmail(),
+                truncateContent(comment.getContent()),
+                diary.getCreatedAt(),
+                member.getNickname(),
+                comment.getCreatedAt()
+        );
+        eventPublisher.publishEvent(event);
+    }
+
 
     private String truncateContent(String content) {
         if (content == null) {
@@ -81,6 +97,9 @@ public class CommentService {
                 : content;
     }
 
+    /**
+     * 댓글 수장
+     */
     @Transactional
     public CommentResponseDTO update(Long commentId, CommentUpdateRequestDTO requestDTO, Long logInMemberId) {
         Member member = getMemberById(logInMemberId);
@@ -91,6 +110,9 @@ public class CommentService {
         return CommentResponseDTO.from(comment);
     }
 
+    /**
+     * 댓글 삭제
+     */
     @Transactional
     public CommentDeleteResponseDTO delete(Long commentId, Long logInMemberId) {
         Member member = getMemberById(logInMemberId);
@@ -105,6 +127,9 @@ public class CommentService {
         return CommentDeleteResponseDTO.from(comment);
     }
 
+    /**
+     * 모든 댓글 검색용 메서드
+     */
     @Transactional(readOnly = true)
     public List<CommentResponseDTO> findAll(Pageable pageable, Long diaryId) {
         Diary diary = getDiaryById(diaryId);
