@@ -6,9 +6,10 @@
 
 ##  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Seedling.png" alt="Seedling" width="25" height="25" /> 우리 서비스는...
 
-> 잔디일기는 모두의 이야기를 잔디로 만들어 매일 소중한 순간들을 남길 수 있는 서비스예요. <br />
-> 일상을 잔디로 심어 꾸준히 성장해 가는 나를 꾸준히 성장시키는 서비스예요. 🍀 <br />
-> [잔디 일기 바로 가기: https://grassdiary.site/](https://grassdiary.site/)
+잔디일기는 일상의 소중한 순간들을 잔디처럼 기록하며, <br />
+나의 성장을 꾸준히 지켜볼 수 있는 서비스예요. 🍀 <br />
+
+잔디 일기 사용해 보기: [https://grassdiary.site/](https://grassdiary.site/)
 
 <br />
 
