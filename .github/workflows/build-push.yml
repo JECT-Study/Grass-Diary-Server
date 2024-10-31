@@ -3,6 +3,10 @@ name: Build and Deploy to Docker Hub
 on:
   push:
     branches: [ "release", "dev" ]
+    paths-ignore:
+      - 'docs/**'
+      - 'readme.md'
+      - 'k8s/**'
 
 jobs:
   build:
