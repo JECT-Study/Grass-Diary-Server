@@ -1,107 +1,83 @@
-<img align="left" width="170" src="https://github.com/CHZZK-Study/Grass-Diary-Client/assets/106158901/ee116ab4-1cf0-48ae-a6a7-e0c84290777a"> 
-<h2>잔디 일기 <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Seedling.png" alt="Seedling" width="25" height="25" /></h2>
+<h2>소중한 순간을 심다, 잔디 일기</h2>
 
-> **_일상 속의 잔디,_**   
-> **_나의 이야기를 키우다_**    
-> _일상의 작은 기록들이 잔디처럼 자라나 큰 성장으로 이어져요_
+<img src="images/잔디일기_메인.png" alt="간단한 설명 사진">
 
 <br />
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Four%20Leaf%20Clover.png" alt="Four Leaf Clover" width="25" height="25" /> 우리 서비스는...
+##  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Seedling.png" alt="Seedling" width="25" height="25" /> 우리 서비스는...
 
 > 잔디일기는 모두의 이야기를 잔디로 만들어 매일 소중한 순간들을 남길 수 있는 서비스예요. <br />
-> 일상을 잔디로 심어 꾸준히 성장해 가는 나를 지켜봐요. 🍀  
-> [잔디 일기 바로 가기](https://grassdiary.site/)
+> 일상을 잔디로 심어 꾸준히 성장해 가는 나를 꾸준히 성장시키는 서비스예요. 🍀 <br />
+> [잔디 일기 바로 가기: https://grassdiary.site/](https://grassdiary.site/)
 
 <br />
 
-<img align="right" width="300" src="https://github.com/CHZZK-Study/Grass-Diary-Client/assets/106158901/accb61ba-9c66-4dbc-8424-d7f627f6576b">
+## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Shooting%20Star.png" alt="Shooting Star" width="25" height="25" /> 프로젝트 주요 기능
 
-_<h3> <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Teddy%20Bear.png" alt="Teddy Bear" width="25" height="25" /> 우리는 성장을 위해 기록합니다.</h3>_
+> 개발 기간: 24.02.01 ~
 
-변화와 성장이 함께 하는 <br />
-**나만의 스토리**를 완성할 수 있어요.
+- **사용자 인증 및 권한 관리**: Gmail을 이용한 로그인, OAuth2.0 기반 인증
+- **일기 작성 및 관리 API**: 일기 작성, 수정, 삭제 기능 제공
+- **댓글 알림 서비스**: Gmail을 통한 알림 발송
+- **일기 조회 API**: 최신순/인기순으로 일기 조회 가능
+- **일기 검색 API**: 해시태그와 날짜별 일기 검색 기능 제공
+- **이미지 업로드**: AWS S3
+- **사용자 프로필 관리**: 프로필 정보 수정 및 관리
+- **포인트 기반 테마 구매**: 사용자 포인트로 테마 구매 가능
+- **개발/배포 환경 분리**: 테스팅 편의를 위해 개발 환경과 배포 환경 분리
+
+
+## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Dizzy.png" alt="Dizzy" width="25" height="25" /> 서비스 화면 엿보기
+
+<img src="images/start-page.png" alt="시작 화면">
+
+<img src="images/main-page.png" alt="메인 페이지">
+
+<img src="images/feed-page.png" alt="피드 화면">
+
+<img src="images/my-page.png" alt="내 일기장 화면">
+
+<img src="images/email-notification.png" alt="이메일 발송 화면">
+
 
 <br />
 
-_<h3> <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Party%20Popper.png" alt="Party Popper" width="25" height="25" /> 꾸준히 잔디를 심고 리워드를 획득해요!</h3>_
-받은 리워드로 테마 상점에서 <br />
-**다양한 아이템**을 만날 수 있어요.
 
-<br />
+## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Rocket.png" alt="Rocket" width="25" height="25" /> 배포 환경과 서버 운영
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Shooting%20Star.png" alt="Shooting Star" width="35" height="35" /> 프로젝트 주요 기능
+- 배포와 개발 환경을 분리해 테스트를 더 쉽게 할 수 있도록 했어요.
+- 클라우드 서비스의 유지 비용을 고려해 홈서버(온프레미스) 환경을 활용하고 있어요.
+- 서버 관리를 더 쉽게 하기 위해 쿠버네티스 환경을 도입했어요.
 
-추가 예정이에요! 🧐
+<img src="images/architecture-2.png" alt="현재 아키텍처">
 
-> 🔎 `full page animation`이 적용된 소개 페이지에서 서비스의 주요 기능들을 확인할 수 있어요.
+<details>
+    <summary>1차 릴리즈 이후 아키텍처를 개선했어요. 토글을 열면 1차 릴리즈 당시 아키텍처를 확인할 수 있어요.</summary>
+    <img src="images/architecture-1.png" alt="1차 릴리즈 당시 아키텍처">
+</details>
 
-![intro-page](https://github.com/CHZZK-Study/Grass-Diary-Client/assets/106158901/777ccca8-66fe-4ec4-a2b4-a21cac432b52)
-
-
-<br />
 
 ## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Star.png" alt="Star" width="25" height="25" /> 우리 팀을 소개해요!
 
-> RELEASE VER.1에 참여했어요!
-
-<table>
-<th colspan="3">Frontend</th>
-<th colspan="3">Backend</th>
-<tr>
-    <td><img src="https://avatars.githubusercontent.com/u/106158901?v=4" width="100" /></td>
-    <td><img src="https://avatars.githubusercontent.com/u/97906653?v=4" width="100" /></td>
-    <td><img src="https://avatars.githubusercontent.com/u/102516350?v=4" width="100" /></td>
-    <td><img src="https://avatars.githubusercontent.com/u/50395809?v=4" width=100px alt="홍예슬"/></td>
-    <td><img src="https://avatars.githubusercontent.com/u/107929019?v=4" width=100px alt="최휘준"/></td>
-    <td><img src="https://avatars.githubusercontent.com/u/79985186?v=4" width=100px alt="so0"/></td>
-</tr>
-<tr>
-    <td><a href="https://github.com/ccconac">@ccconac</a></td>
-    <td><a href="https://github.com/rkdcodus">@rkdcodus</a></td>
-    <td><a href="https://github.com/KKYHH">@KKYHH</a></td>
-    <td><a href="https://github.com/HongYeseul">@HongYeseul</a></td>
-    <td><a href="https://github.com/chjcode">@chjcode</a></td>
-    <td><a href="https://github.com/minisyu">@minisyu</a></td>
-</tr>
-</table>
+<div align="center">
+    <table>
+        <th colspan="4" style="text-align: center;">Backend</th>
+        <tr>
+            <td><img src="https://avatars.githubusercontent.com/u/50395809?v=4" width=100px alt="홍예슬"/></td>
+            <td><img src="https://avatars.githubusercontent.com/u/107929019?v=4" width=100px alt="최휘준"/></td>
+            <td><img src="https://avatars.githubusercontent.com/u/79985186?v=4" width=100px alt="so0"/></td>
+            <td><img src="https://avatars.githubusercontent.com/u/77189999?v=4" width=100px alt="jjaegii"/></td>
+        </tr>
+        <tr>
+            <td><a href="https://github.com/HongYeseul">@HongYeseul</a></td>
+            <td><a href="https://github.com/chjcode">@chjcode</a></td>
+            <td><a href="https://github.com/minisyu">@minisyu</a></td>
+            <td><a href="https://github.com/jjaegii">@jjaegii</a></td>
+        </tr>
+    </table>
+</div>
 
 <br />
-
-> RELEASE VER.2에 참여 중이에요!
-
-<table>
-<th colspan="3">Frontend</th>
-<th colspan="2">Backend</th>
-<th>DevOps</th>
-<tr>
-    <td><img src="https://avatars.githubusercontent.com/u/106158901?v=4" width="100" /></td>
-    <td><img src="https://avatars.githubusercontent.com/u/97906653?v=4" width="100" /></td>
-    <td><img src="https://avatars.githubusercontent.com/u/102516350?v=4" width="100" /></td>
-    <td><img src="https://avatars.githubusercontent.com/u/50395809?v=4" width=100px alt="홍예슬"/></td>
-    <td><img src="https://avatars.githubusercontent.com/u/107929019?v=4" width=100px alt="최휘준"/></td>
-    <td><img src="https://avatars.githubusercontent.com/u/77189999?v=4" width=100px alt="jjaegii"/></td>
-</tr>
-<tr>
-    <td><a href="https://github.com/ccconac">@ccconac</a></td>
-    <td><a href="https://github.com/rkdcodus">@rkdcodus</a></td>
-    <td><a href="https://github.com/KKYHH">@KKYHH</a></td>
-    <td><a href="https://github.com/HongYeseul">@HongYeseul</a></td>
-    <td><a href="https://github.com/chjcode">@chjcode</a></td>
-    <td><a href="https://github.com/jjaegii">@jjaegii</a></td>
-</tr>
-
-</table>
-
-<br />
-
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Rocket.png" alt="Rocket" width="35" height="35" /> Architecture
-
-현재 쿠버네티스 환경(홈서버)에서 구동되고 있어 아래의 사진과는 조금 다릅니다. 추후 수정 예정입니다.
-
-<img src="./images/architecture.png">
-
-
 
 ## ✔️️ etc...
 
